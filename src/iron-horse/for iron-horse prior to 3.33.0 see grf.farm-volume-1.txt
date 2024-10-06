@@ -1,0 +1,7 @@
+Lots of Iron Horse dirs make git slow due to very large numbers of files.
+
+To address this, the repo is sharded for Iron Horse.
+
+Iron Horse versions prior to 3.33.0 are found in grf.farm volume 1.
+
+https://github.com/andythenorth/grf.farm-volume-1

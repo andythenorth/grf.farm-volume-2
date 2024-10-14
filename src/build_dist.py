@@ -27,9 +27,6 @@ docs_templates = PageTemplateLoader(
 )
 
 def render_grf_index_pages(grf_name, dist_dir_path):
-    print("Adding index page for", grf_name)
-    template = docs_templates["grf_index_page.pt"]
-
     distributed_docs_versions = [
         dir_name
         for dir_name in os.listdir(dist_dir_path)
@@ -43,17 +40,23 @@ def render_grf_index_pages(grf_name, dist_dir_path):
     distributed_docs_versions = sorted(
         distributed_docs_versions, key=lambda x: parse(x)
     )
+    distributed_docs_versions.reverse()
 
-    grf_index_page_html = template(
-        grf_farm=grf_farm,
-        grf_name=grf_name,
-        distributed_docs_versions=distributed_docs_versions,
-    )
-    grf_index_page_file = codecs.open(
-        os.path.join(dist_dir_path, "index.html"), "w", "utf8"
-    )
-    grf_index_page_file.write(grf_index_page_html)
-    grf_index_page_file.close()
+    print("latest", distributed_docs_versions[0])
+
+    for output_filename, template_filename in [('index.html', 'grf_index_page.pt'), ('latest.html', 'grf_latest_version_redirect.pt')]:
+        print("Adding", output_filename, "for", grf_name)
+        template = docs_templates[template_filename]
+        grf_page_html = template(
+            grf_farm=grf_farm,
+            grf_name=grf_name,
+            distributed_docs_versions=distributed_docs_versions,
+        )
+        grf_page_file = codecs.open(
+            os.path.join(dist_dir_path, output_filename), "w", "utf8"
+        )
+        grf_page_file.write(grf_page_html)
+        grf_page_file.close()
 
 
 def main():

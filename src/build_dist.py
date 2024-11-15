@@ -26,6 +26,7 @@ docs_templates = PageTemplateLoader(
     os.path.join(currentdir, "src", "templates"), format="text"
 )
 
+
 def render_grf_index_pages(grf_name, dist_dir_path):
     distributed_docs_versions = [
         dir_name
@@ -44,16 +45,38 @@ def render_grf_index_pages(grf_name, dist_dir_path):
 
     print("latest", distributed_docs_versions[0])
 
-    for output_filename, template_filename in [('index.html', 'grf_index_page.pt'), ('latest.html', 'grf_latest_version_redirect.pt')]:
-        print("Adding", output_filename, "for", grf_name)
-        template = docs_templates[template_filename]
+    pages = [
+        {
+            "output_filename": "index.html",
+            "redirect_target_subpath": "index.html",
+            "template_filename": "grf_index_page.pt",
+        },
+        {
+            "output_filename": "latest.html",
+            "redirect_target_subpath": "index.html",
+            "template_filename": "grf_latest_version_redirect.pt",
+        },
+    ]
+    if grf_name == "polar-fox":
+        pages.append(
+            {
+                "output_filename": "frax_latest.html",
+                "redirect_target_subpath": "frax.html",
+                "template_filename": "grf_latest_version_redirect.pt",
+            },
+        )
+
+    for page in pages:
+        print("Adding", page["output_filename"], "for", grf_name)
+        template = docs_templates[page["template_filename"]]
         grf_page_html = template(
             grf_farm=grf_farm,
             grf_name=grf_name,
             distributed_docs_versions=distributed_docs_versions,
+            page=page,
         )
         grf_page_file = codecs.open(
-            os.path.join(dist_dir_path, output_filename), "w", "utf8"
+            os.path.join(dist_dir_path, page["output_filename"]), "w", "utf8"
         )
         grf_page_file.write(grf_page_html)
         grf_page_file.close()

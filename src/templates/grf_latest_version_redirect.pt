@@ -1,12 +1,12 @@
 <html>
     <head>
         <!--! it's not guaranteed that the first item in distributed_docs_versions will be latest, but it's a reasonable assumption as of Oct 2024 -->
-        <meta http-equiv="refresh" content="0;url=${str(distributed_docs_versions[0])}/index.html">
+        <meta http-equiv="refresh" content="0;url=${str(distributed_docs_versions[0])}/${page['redirect_target_subpath']}">
     </head>
     <body>
         <!--! should auto-refresh to redirect to 'latest', but just in case... -->
         <h1><a href="https://www.grf.farm">grf.farm</a></h1>
         <h2>Latest ${grf_name}</h2>
-        <p><a href="${str(distributed_docs_versions[0])}/index.html">${str(distributed_docs_versions[0])}</a></p>
+        <p><a href="${str(distributed_docs_versions[0])}/${page['redirect_target_subpath']}">${str(distributed_docs_versions[0])}</a></p>
     </body>
 </html>

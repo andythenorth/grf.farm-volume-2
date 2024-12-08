@@ -65,6 +65,15 @@ def render_grf_index_pages(grf_name, dist_dir_path):
                 "template_filename": "grf_latest_version_redirect.pt",
             },
         )
+    if grf_name == "firs":
+        pages.append(
+            {
+                "output_filename": "code_reference_latest.html",
+                "redirect_target_subpath": "html/code_reference.html",
+                "template_filename": "grf_latest_version_redirect.pt",
+            },
+        )
+
 
     for page in pages:
         print("Adding", page["output_filename"], "for", grf_name)

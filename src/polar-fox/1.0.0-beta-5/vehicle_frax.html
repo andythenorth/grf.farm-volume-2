@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            
+        FRAX for Vehicle Authors | Polar Fox
+    
+        </title>
+        <link type="text/css" href="static/css/bootstrap.min.css" rel="stylesheet">
+        <link type="text/css" href="static/css/style.css" rel="stylesheet">
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll("table.sortable th").forEach(header => {
+                    header.addEventListener("click", () => {
+                        const table = header.closest("table");
+                        const columnIndex = Array.from(header.parentNode.children).indexOf(header);
+                        const type = header.getAttribute("data-type");
+                        const isAsc = table.getAttribute("data-sort") !== "asc";
+                        const rows = Array.from(table.querySelector("tbody").rows);
+
+                        // Remove sorted classes from all headers
+                        header.parentNode.querySelectorAll("th").forEach(th => th.classList.remove("sorted-asc", "sorted-desc"));
+
+                        // Add sorted class to the current header
+                        header.classList.add(isAsc ? "sorted-asc" : "sorted-desc");
+
+                        rows.sort((a, b) => {
+                            let aVal = a.cells[columnIndex].innerText;
+                            let bVal = b.cells[columnIndex].innerText;
+                            if (type === 'number') {
+                                aVal = parseFloat(aVal) || 0;
+                                bVal = parseFloat(bVal) || 0;
+                            }
+                            return isAsc ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
+                        });
+
+                        rows.forEach(row => table.querySelector("tbody").appendChild(row));
+                        table.setAttribute("data-sort", isAsc ? "asc" : "desc");
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-light text-decoration-underline"
+                           href="index.html">Polar Fox</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light text-decoration-underline"
+                           href="frax.html">FRAX Cargo Classes</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Inject the URL prefix from Chameleon's docs_pages['overview']
+                var prefix = "frax.html";
+
+                // Regular expression to match 'CC_' followed by uppercase letters or underscores
+                var regex = /\b(CC_[A-Z_]+)\b/g;
+
+                // Select all elements within the body
+                var elements = document.querySelectorAll('body *');
+
+                elements.forEach(function(element) {
+                    element.childNodes.forEach(function(child) {
+                        if (child.nodeType === Node.TEXT_NODE) {
+                            var matches = child.nodeValue.match(regex);
+                            if (matches) {
+                                // Replace matched patterns with linked <code> elements
+                                var newHTML = child.nodeValue.replace(regex, function(match) {
+                                    return '<code><a href="' + prefix + '#' + match + '">' + match + '</a></code>';
+                                });
+                                // Create a new span element to hold the transformed HTML
+                                var span = document.createElement('span');
+                                span.innerHTML = newHTML;
+                                // Replace the original text node with the new span
+                                element.replaceChild(span, child);
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+        <div class="hero fox-bg-blue">
+            <div class="container pt-3 pb-1">
+                <h1 class="display-6">FRAX Cargo Class Scheme</h1>
+                <p><small><i>FRAX Routes all Xenon etc</i></small></p>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg fox-bg-blue" style="border-bottom: solid 1px black;">
+            <div class="container">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-light text-decoration-underline"
+                           href="frax.html">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light text-decoration-underline"
+                           href="vehicle_frax.html">For Vehicle Authors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light text-decoration-underline"
+                           href="industry_frax.html">For Industry Authors</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+            
+        
+
+        <div class="flex-grow-1 container pt-5 pb-5">
+            <div>
+        <div>
+
+        <h1>Guide for Vehicle Authors</h1>
+
+        <div class="pt-3 pb-3">
+            <p>Sections:</p>
+            <ul>
+                <li><a href="#guide">Guide</a></li>
+                <li><a href="#example-vehicles-table">Example Vehicles - Table</a></li>
+                <li><a href="#example-vehicles-details">Example Vehicles - Details</a></li>
+            </ul>
+        </div>
+
+        <hr />
+
+        <div class="pt-3 pb-3">
+            <div class="bd-callout bd-callout-warning">
+                <p>
+                    <strong>Heads up!</strong> Cargo classes are matched on 'any,' not 'all.' Vehicles will refit to any cargo with <strong>one</strong> of their refittable classes, unless the cargo has a class in the vehicle's non-refittable list.
+                </p>
+            </div>
+            <div class="pt-3">
+                <h2 id="guide">Guide</h2>
+                <p>
+                    There are three categories of vehicle:
+                    <a href="#passenger_vehicle">passenger</a>,
+                    <a href="#mail_vehicle">mail</a>, and
+                    <a href="#freight_vehicle">freight</a>.
+                </p>
+            </div>
+
+            <div class="ps-1">
+                <div class="guide-section">
+                    <h3 id="passenger_vehicle" class="guide-heading mb-0">Passenger Vehicle</h3>
+
+                    <div class="guide-arrow-down"></div>
+
+                    <div class="guide-sub-section">
+                        <h4 class="guide-heading guide-step-heading">
+                            <span class="guide-step-marker">1</span> Refittable Classes
+                        </h4>
+                        <h5>It's just passengers folks</h5>
+                        <p>Set CC_PASSENGERS.  Don't set anything else.</p>
+                    </div>
+
+                    <div class="guide-arrow-down"></div>
+
+                    <div class="guide-sub-section">
+                        <h4 class="guide-heading guide-step-heading">
+                            <span class="guide-step-marker">2</span> Non-Refittable Classes
+                        </h4>
+                        <h5>No exclusions</h5>
+                        <p>Don't set any non-refittable classes.</p>
+                    </div>
+                </div>
+
+                <div class="guide-section-link-block">
+                    <hr />
+                </div>
+
+                <div class="guide-section">
+                    <h3 id="mail_vehicle" class="guide-heading mb-0">Mail Vehicle</h3>
+
+                    <div class="guide-arrow-down"></div>
+
+                    <div class="guide-sub-section">
+                        <h4 class="guide-heading guide-step-heading">
+                            <span class="guide-step-marker">1</span> Refittable Classes
+                        </h4>
+                        <h5>Mail, maybe express</h5>
+                        <p>Set CC_MAIL for regular mail vehicles.</p>
+                        <p>Some mail vehicles are also suitable for CC_EXPRESS and/or CC_ARMOURED.</p>
+                    </div>
+
+                    <div class="guide-arrow-down"></div>
+
+                    <div class="guide-sub-section">
+                        <h4 class="guide-heading guide-step-heading">
+                            <span class="guide-step-marker">2</span> Non-Refittable Classes
+                        </h4>
+                        <h5>No exclusions</h5>
+                        <p>Don't set any non-refittable classes.</p>
+                    </div>
+                </div>
+
+                <div class="guide-section-link-block">
+                    <hr />
+                </div>
+
+                <div class="guide-section">
+                    <h3 id="freight_vehicle" class="guide-heading mb-0">Freight Vehicle</h3>
+
+                    <div class="guide-arrow-down"></div>
+
+                    <div class="guide-sub-section">
+                        <h4 class="guide-heading guide-step-heading">
+                            <span class="guide-step-marker">1</span> Refittable Classes
+                        </h4>
+
+                        <div class="pb-3">
+                            <h5>
+                                Set a <strong>basic handling</strong> class.
+                            </h5>
+                            <ul class="guide-list-group">
+                                
+                                    <li class="guide-list-group-item">CC_PIECE_GOODS</li>
+                                
+                                    <li class="guide-list-group-item">CC_OPEN_BULK</li>
+                                
+                                    <li class="guide-list-group-item">CC_COVERED_BULK</li>
+                                
+                                    <li class="guide-list-group-item">CC_POWDER_BULK</li>
+                                
+                                    <li class="guide-list-group-item">CC_LIQUID_BULK</li>
+                                
+                                    <li class="guide-list-group-item">CC_GAS_BULK</li>
+                                
+                            </ul>
+                            <p>Most vehicles should set <strong>one</strong> basic handling class. In most cases setting more than one is not helpful, but there may be exceptions, for example, intermodal container vehicles.</p>
+                            <p>Some specialised types might not set any basic handling class, for example:</p>
+                            <ul>
+                                <li>Armoured vehicles or refrigerated vehicles might set only a <strong>special handling</strong> class.</li>
+                                <li>Some highly specialised types might refit only to specific <strong>cargo labels</strong>, for example nuclear fuel transporters or livestock vans.</li>
+                            </ul>
+                        </div>
+
+                        <div class="pb-3">
+                            <h5>
+                                Set any <strong>special handling</strong> classes that apply.
+                            </h5>
+                            <ul class="guide-list-group">
+                                
+                                    <li class="guide-list-group-item">CC_FLATBED</li>
+                                
+                                    <li class="guide-list-group-item">CC_EXPRESS</li>
+                                
+                                    <li class="guide-list-group-item">CC_ARMOURED</li>
+                                
+                                    <li class="guide-list-group-item">CC_REFRIGERATED</li>
+                                
+                                    <li class="guide-list-group-item">CC_WEIRD</li>
+                                
+                            </ul>
+                            <p>These classes mostly relate to specific types of vehicles.</p>
+                        </div>
+
+                        <div class="pb-3">
+                            <h5>
+                                Got <strong>Mail</strong>?
+                            </h5>
+                                <p>Some freight vehicles should also set CC_MAIL.</p>
+                                <p>For example, many planes and helicopters, some ships, some box wagons or box vans.</p>
+                        </div>
+                    </div>
+
+                    <div class="guide-arrow-down"></div>
+
+                    <div class="guide-sub-section">
+                        <h4 class="guide-heading guide-step-heading">
+                            <span class="guide-step-marker">2</span> Non-Refittable Classes
+                        </h4>
+
+                        <div class="pb-3">
+                            <h5>
+                                Set potable status
+                            </h5>
+                            <p>Some vehicles should set <strong>one</strong> of the <strong>potable status</strong> clases.</p>
+                            <ul class="guide-list-group">
+                                
+                                    <li class="guide-list-group-item">CC_POTABLE</li>
+                                
+                                    <li class="guide-list-group-item">CC_NON_POTABLE</li>
+                                
+                            </ul>
+                            <p>Some vehicles are suitable for both potable and non-potable cargos, and do not need to set any potable status classes, for example vehicles that handle packaged cargo via CC_PIECE_GOODS.</p>
+                            <p><strong>Never</strong> set both potable status classes.</p>
+                            <p><strong>Never</strong> set potable status classes as refittable, they are exclude-only.</p>
+                            <p>Some highly specialised vehicles may not need to set any potable status classes, and may instead depend on refitting to specific cargo labels.</p>
+                        </div>
+                        <div class="pb-3">
+                            <h5>
+                                Optionally exclude weird cargos
+                            </h5>
+                            <p>Sometimes it's helpful to be able to exclude CC_WEIRD from general vehicles. The details for CC_WEIRD provide more advice on this.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="pt-3 pb-3">
+            <h2 id="example-vehicles-table">Example Vehicles - Table</h2>
+            
+            <table  class="table table-striped table-hover table-small-font mt-4">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 33.33%;">Example vehicle</th>
+                        <th style="width: 33.33%;">Refittable cargo classes </th>
+                        <th style="width: 33.33%;">Non-refittable cargo classes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <div class="pt-3 pb-3">
+            <h2 id="example-vehicles-details">Example Vehicles - Details</h2>
+            
+        </div>
+
+    </div>
+    </div>
+        </div>
+
+        <div class="mt-auto">
+            <div style="text-align:center; color:#999; padding:5px; background-color:#eee; border-top:solid 1px #ddd; box-shadow: inset 0px 1px 1px #ddd">
+                With thanks to all who helped
+            </div>
+        </div>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

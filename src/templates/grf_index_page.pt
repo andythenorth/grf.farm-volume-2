@@ -3,7 +3,14 @@
         <h1><a href="https://www.grf.farm">grf.farm</a></h1>
         <h2>${grf_name}</h2>
         <h3>Latest version</h3>
-        <p><a href="latest.html">latest.html</a> always links to the latest release.</p>
+        <p>
+            <script>
+              document.write(
+                '<a href="latest.html?cb=' + Date.now() + '">Latest</a>'
+              );
+            </script>
+            always links to the latest release.
+         </p>
         <!--! the versions list contains Version instances from python packaging library, these are more reliably sorted, but need converted to string for use here -->
         <h3>All versions</h3>
         <ul>
